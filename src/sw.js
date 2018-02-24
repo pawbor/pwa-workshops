@@ -40,15 +40,31 @@ function removeOldCaches(newestCacheName) {
 }
 
 function readFromCache(cacheName, request) {
-  return caches.open(cacheName).then(cache => cache.match(request));
+  return caches
+    .open(cacheName)
+    .then(cache =>
+      cache
+        .match(request)
+        .then(
+          response =>
+            !response && isHtmlRequest(request)
+              ? cache.match("/index.html")
+              : response
+        )
+    );
+}
+
+function isHtmlRequest(request) {
+  return request.headers.get("accept").includes("text/html");
 }
 
 function fetchAndCache(cacheName, request) {
-  return fetch(request).then(response =>
-    caches.open(cacheName).then(cache => {
-      cache.put(request, response.clone());
-      return response;
-    })
+  return fetch(request, { mode: "cors", credentials: "same-origin" }).then(
+    response =>
+      caches.open(cacheName).then(cache => {
+        cache.put(request, response.clone());
+        return response;
+      })
   );
 }
 
