@@ -39,7 +39,7 @@ class List extends Component {
         <ul className="List">
           {visibleItems.length ? (
             visibleItems.map(item => (
-              <LazyLoad height={50}>
+              <LazyLoad height={200}>
                 <ListItem key={item.id} {...item} />
               </LazyLoad>
             ))
