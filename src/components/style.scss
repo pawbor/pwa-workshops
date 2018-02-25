@@ -1,0 +1,32 @@
+$anim-time: 200ms;
+$anim-offset: 50px;
+
+.fade-enter {
+  position: absolute;
+  top:0;
+  // background-color: red;
+  opacity: 0;
+  z-index: 1;
+  transform: translateY($anim-offset);
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all $anim-time $anim-time ease-in;
+}
+
+.fade-exit {
+  position: absolute;
+  top:0;
+  // background-color: blue;
+  opacity: 1;
+  z-index: 1;
+  transform: translateY(0);
+}
+
+.fade-exit.fade-exit-active {
+  opacity: 0;
+  transform: translateY($anim-offset);
+  transition: all $anim-time 0s ease-in;
+}

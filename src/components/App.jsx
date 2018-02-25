@@ -1,17 +1,15 @@
-import React, { Fragment, Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from 'react-router-dom';
-import List from './List';
-import EmptyPage from './EmptyPage';
-import TabBar from './TabBar';
-import ItemShow from './ItemShow';
+import React, { Fragment, Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import List from "./List";
+import EmptyPage from "./EmptyPage";
+import TabBar from "./TabBar";
+import ItemShow from "./ItemShow";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import "./style.scss";
 
 class App extends Component {
   state = {
-    wines: [],
+    wines: []
   };
 
   componentDidMount() {
@@ -19,30 +17,40 @@ class App extends Component {
   }
 
   getData = () => {
-    fetch('https://api-wine.herokuapp.com/api/v1/wines')
+    fetch("https://api-wine.herokuapp.com/api/v2/wines")
       .then(res => res.json())
       .then(data => {
         this.setState({ wines: data });
-      })
-
+      });
   };
 
-  renderContent() {
+  renderContent(location) {
     if (!this.state.wines.length) {
       return <div />;
     }
 
     return (
       <Fragment>
-        <Switch>
-          <Route exact path="/" component={() => <List items={this.state.wines} />} />
-          <Route path="/wine/:id" component={() => <ItemShow items={this.state.wines} />} />
-          <Route path="/wishlist" component={EmptyPage} />
-          <Route path="/cellar" component={EmptyPage} />
-          <Route path="/articles" component={EmptyPage} />
-          <Route path="/profile" component={EmptyPage} />
-        </Switch>
-        <TabBar />
+        <TransitionGroup>
+          <CSSTransition key={location.key} classNames="fade" timeout={200}>
+            <Switch location={location}>
+              <Route
+                exact
+                path="/"
+                component={() => <List items={this.state.wines} />}
+              />
+              <Route
+                path="/wine/:id"
+                component={() => <ItemShow items={this.state.wines} />}
+              />
+              <Route path="/wishlist" component={EmptyPage} />
+              <Route path="/cellar" component={EmptyPage} />
+              <Route path="/articles" component={EmptyPage} />
+              <Route path="/profile" component={EmptyPage} />
+            </Switch>
+          </CSSTransition>
+          <TabBar />
+        </TransitionGroup>
       </Fragment>
     );
   }
@@ -50,9 +58,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Fragment>
-          {this.renderContent()}
-        </Fragment>
+        <Route render={({ location }) => this.renderContent(location)} />
       </Router>
     );
   }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bool, object, string, element } from 'prop-types';
 import arrowIcon from './../../assets/images/arrow.svg';
 import { withRouter } from 'react-router-dom';
+import OfflineToast from '../OfflineToast';
 import './style.scss';
 
 class Nav extends Component {
@@ -21,6 +22,7 @@ class Nav extends Component {
             {title && <h1 className="Nav__title">{title}</h1>}
             {annotation && <p className="Nav__annotation">{annotation}</p>}
           </div>
+          <OfflineToast />
         </div>
 
         {children}
